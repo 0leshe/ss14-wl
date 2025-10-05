@@ -177,6 +177,12 @@ namespace Content.Shared.Atmos
             [Gas.Plasma] = Loc.GetString("gas-plasma-abbreviation"),
             [Gas.Tritium] = Loc.GetString("gas-tritium-abbreviation"),
             [Gas.WaterVapor] = Loc.GetString("gas-water-vapor-abbreviation"),
+            [Gas.BZ] = Loc.GetString("gas-bz-abbreviation"),
+            [Gas.Zauker] = Loc.GetString("gas-zauker-abbreviation"),
+            [Gas.Pluoxium] = Loc.GetString("gas-pluoxium-abbreviation"),
+            [Gas.Nitrium] = Loc.GetString("gas-nitrium-abbreviation"),
+            [Gas.HyperNoblium] = Loc.GetString("gas-hyper-noblium-abbreviation"),
+            [Gas.Healium] = Loc.GetString("gas-healium-abbreviation")
         };
 
         #region Excited Groups
@@ -206,7 +212,7 @@ namespace Content.Shared.Atmos
         /// <summary>
         ///     Total number of gases. Increase this if you want to add more!
         /// </summary>
-        public const int TotalNumberOfGases = 9;
+        public const int TotalNumberOfGases = 16;
 
         /// <summary>
         ///     This is the actual length of the gases arrays in mixtures.
@@ -228,8 +234,8 @@ namespace Content.Shared.Atmos
         public const float SuperSaturationEnds = SuperSaturationThreshold / 3;
 
         public const float OxygenBurnRateBase = 1.4f;
-        public const float PlasmaMinimumBurnTemperature = (100f+T0C);
-        public const float PlasmaUpperTemperature = (1370f+T0C);
+        public const float PlasmaMinimumBurnTemperature = (100f + T0C);
+        public const float PlasmaUpperTemperature = (1370f + T0C);
         public const float PlasmaOxygenFullburn = 10f;
         public const float PlasmaBurnRateDelta = 9f;
 
@@ -353,6 +359,39 @@ namespace Content.Shared.Atmos
         public const float MaxTransferRate = 200;
 
         #endregion
+        #region ADT-Gas
+        /// <summary>
+        ///     Defines energy released in BZ formation.
+        /// </summary>
+        public const float BZFormationEnergy = 80000f;
+
+        /// <summary>
+        ///     Defines energy released in N2O decomposition reaction.
+        /// </summary>
+        public const float NitrousOxideDecompositionEnergy = 200000f;
+
+        /// <summary>
+        ///     Defines energy released in Pluoxium formation.
+        /// </summary>
+        public const float PluoxiumFormationEnergy = 250f;
+
+        /// <summary>
+        ///     The maximum amount of pluoxium that can form per reaction tick.
+        /// </summary>
+        public const float PluoxiumMaxRate = 5f;
+        public const float NitriumFormationTempDivisor = (T0C + 100f) * 8f;
+        public const float NitriumFormationEnergy = 100000f;
+        public const float NitriumDecompositionTempDivisor = (T0C + 100f) * 8f;
+        public const float NitriumDecompositionEnergy = 30000f;
+        public const float NitriumDecompositionMaxTemp = T0C + 70f;
+        public const float NobliumFormationEnergy = 20000000f;
+        public const float HealiumFormationEnergy = 9000f;
+        public const float ZaukerFormationEnergy = 5000f;
+        public const float ZaukerFormationTemperatureScale = 0.000005f;
+        public const float ZaukerDecompositionMaxRate = 20f;
+        public const float ZaukerDecompositionEnergy = 460f;
+        public const float KritiumFormationEnergy = 4000f;
+        #endregion
     }
 
     /// <summary>
@@ -369,6 +408,15 @@ namespace Content.Shared.Atmos
         WaterVapor = 5,
         Ammonia = 6,
         NitrousOxide = 7,
-        Frezon = 8
+        Frezon = 8,
+        //WL-Gas-Start
+        BZ = 9,
+        Pluoxium = 10,
+        Nitrium = 11,
+        Healium = 12,
+        Zauker = 13,
+        HyperNoblium = 14,
+        Kritium = 15
+        //WL-Gas-End
     }
 }

@@ -116,7 +116,37 @@
       "name": "scrubber-connector"
     },
     {
-      "name": "scrubber-open"
+      "name": "scrubber-open"    
+    },
+    {
+      "name": "brown"
+    },
+    {
+      "name": "brown-1"
+    },
+    {
+      "name": "purple"
+    },
+    {
+      "name": "purple-1"
+    },
+    {
+      "name": "healium"
+    },
+    {
+      "name": "healium-1"
+    },
+    {
+      "name": "zauker"
+    },
+    {
+      "name": "nob"
+    },
+    {
+      "name": "nob-1"
+    },
+    {
+      "name": "zauker-1"
     }
   ]
 }

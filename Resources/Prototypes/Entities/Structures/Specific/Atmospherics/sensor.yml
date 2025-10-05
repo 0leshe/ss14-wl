@@ -25,6 +25,15 @@
       Ammonia: stationAmmonia
       NitrousOxide: stationNO
       Frezon: danger
+      # WL-Gas-Start
+      BZ: stationBZ
+      Pluoxium: stationPluoxium
+      Nitrium: stationNitrium
+      Healium: stationHealium
+      Zauker: stationZauker
+      HyperNoblium: stationHyperNoblium
+      Kritium: stationKritium
+      # WL-Gas-End
   - type: Tag
     tags:
       - AirSensor

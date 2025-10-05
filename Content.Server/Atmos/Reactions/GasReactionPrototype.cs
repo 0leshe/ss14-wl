@@ -1,4 +1,4 @@
-﻿using Content.Server.Atmos.EntitySystems;
+using Content.Server.Atmos.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Reactions;
 using Robust.Shared.Prototypes;
@@ -35,6 +35,12 @@ namespace Content.Server.Atmos.Reactions
         /// </summary>
         [DataField("minimumEnergy")]
         public float MinimumEnergyRequirement { get; private set; } = 0f;
+
+        /// <summary>
+        ///     Minimum energy requirement.
+        /// </summary>
+        [DataField("minimumPressure")]
+        public float MinimumPressureRequirement { get; private set; } = 0f;
 
         /// <summary>
         ///     Lower numbers are checked/react later than higher numbers.

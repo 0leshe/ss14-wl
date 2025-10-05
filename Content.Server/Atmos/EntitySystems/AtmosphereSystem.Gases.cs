@@ -449,12 +449,14 @@ namespace Content.Server.Atmos.EntitySystems
             var reaction = ReactionResult.NoReaction;
             var temperature = mixture.Temperature;
             var energy = GetThermalEnergy(mixture);
+            var pressure = mixture.Pressure;
 
             foreach (var prototype in GasReactions)
             {
                 if (energy < prototype.MinimumEnergyRequirement ||
                     temperature < prototype.MinimumTemperatureRequirement ||
-                    temperature > prototype.MaximumTemperatureRequirement)
+                    temperature > prototype.MaximumTemperatureRequirement ||
+                    pressure < prototype.MinimumPressureRequirement)
                     continue;
 
                 var doReaction = true;

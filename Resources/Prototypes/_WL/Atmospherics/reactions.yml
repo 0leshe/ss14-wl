@@ -1,0 +1,163 @@
+- type: gasReaction
+  id: BZProductionReaction
+  priority: 2
+  maximumTemperature: 313.149
+  minimumRequirements:
+  - 0     # oxygen
+  - 0     # nitrogen
+  - 0     # carbon dioxide
+  - 10    # plasma
+  - 0     # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 10    # n2o
+  - 0     # frezon
+  - 0     # bz
+  effects:
+  - !type:BZProductionReaction {}
+
+- type: gasReaction
+  id: PluoxiumProductionReaction
+  priority: 2
+  minimumTemperature: 50
+  maximumTemperature: 273.15
+  minimumRequirements:
+  - 0.01  # oxygen
+  - 0     # nitrogen
+  - 0.01  # carbon dioxide
+  - 0     # plasma
+  - 0.01  # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 0     # n2o
+  - 0     # frezon
+  - 0     # bz
+  - 0     # pluoxium
+  effects:
+  - !type:PluoxiumProductionReaction {}
+
+- type: gasReaction
+  id: NitriumProduction
+  priority: 2
+  minimumTemperature: 1500
+  minimumRequirements:
+  - 0     # oxygen
+  - 10    # nitrogen
+  - 0     # carbon dioxide
+  - 0     # plasma
+  - 20    # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 0     # n2o
+  - 0     # frezon
+  - 5     # bz
+  - 0     # pluoxium
+  - 0     # nitrium
+  - 0     # healium
+  - 0     # zauker
+  effects:
+  - !type:NitriumProductionReaction {}
+
+- type: gasReaction
+  id: NitriumDecomposition
+  priority: 3
+  maximumTemperature: 343.15
+  minimumRequirements:
+  - 0.01  # oxygen
+  - 0     # nitrogen
+  - 0     # carbon dioxide
+  - 0     # plasma
+  - 0     # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 0     # n2o
+  - 0     # frezon
+  - 0     # bz
+  - 0     # pluoxium
+  - 0.01  # nitrium
+  - 0     # healium
+  - 0     # zauker
+  effects:
+  - !type:NitriumDecompositionReaction {}
+
+- type: gasReaction
+  id: ZaukerProduction
+  priority: 2
+  minimumTemperature: 50000
+  maximumTemperature: 75000
+  minimumRequirements:
+  - 0     # oxygen
+  - 0     # nitrogen
+  - 0     # carbon dioxide
+  - 0     # plasma
+  - 0     # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 0     # n2o
+  - 0     # frezon
+  - 0     # bz
+  - 0     # pluoxium
+  - 0.01  # nitrium
+  - 0     # healium
+  - 0.01  # hyper-noblium
+  - 0     # zauker
+  effects:
+  - !type:ZaukerProductionReaction {}
+
+- type: gasReaction
+  id: ZaukerDecomposition
+  priority: 3
+  minimumRequirements:
+  - 0     # oxygen
+  - 0.01  # nitrogen
+  - 0     # carbon dioxide
+  - 0     # plasma
+  - 0     # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 0     # n2o
+  - 0     # frezon
+  - 0     # bz
+  - 0     # pluoxium
+  - 0     # nitrium
+  - 0     # healium
+  - 0.01  # zauker
+  effects:
+  - !type:ZaukerDecompositionReaction {}
+
+- type: gasReaction
+  id: HyperNobliumProduction
+  priority: 2
+  minimumTemperature: 2.7
+  maximumTemperature: 15
+  minimumRequirements:
+  - 0     # oxygen
+  - 10    # nitrogen
+  - 0     # carbon dioxide
+  - 0     # plasma
+  - 5     # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 0     # n2o
+  - 0     # frezon
+  - 0     # bz
+  - 0     # pluoxium
+  - 0     # hydrogen
+  - 0     # nitrium
+  - 0     # healium
+  - 0     # hyper-noblium
+  - 0     # zauker
+  effects:
+  - !type:HyperNobliumProductionReaction {}
+
+- type: gasReaction
+  id: KritiumProductionReaction
+  priority: 2
+  minimumPressure: 1200
+  minimumRequirements:
+  - 0.05     # oxygen
+  - 0     # nitrogen
+  - 0     # carbon dioxide
+  - 0.8    # plasma
+  effects:
+  - !type:BZProductionReaction {}
