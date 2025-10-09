@@ -10,41 +10,47 @@ public sealed partial class BZProductionReaction : IGasReactionEffect
 {
     public ReactionResult React(GasMixture mixture, IGasMixtureHolder? holder, AtmosphereSystem atmosphereSystem, float heatScale)
     {
-        var initialHyperNoblium = mixture.GetMoles(Gas.HyperNoblium);
-        if (initialHyperNoblium >= 2.5f && mixture.Temperature > 20f)
+        var initialHypernoblium = mixture.GetMoles(Gas.HyperNoblium);
+        if (initialHypernoblium >= 2.5f && mixture.Temperature > 20f)
         {
-            mixture.AdjustMoles(Gas.HyperNoblium, initialHyperNoblium - 0.1f);
+            mixture.AdjustMoles(Gas.HyperNoblium, -0.1f);
             return ReactionResult.NoReaction;
         }
-
-        var initialNitrousOxide = mixture.GetMoles(Gas.NitrousOxide);
-        var initialPlasma = mixture.GetMoles(Gas.Plasma);
+        var initN2O = mixture.GetMoles(Gas.NitrousOxide);
+        var initPlasma = mixture.GetMoles(Gas.Plasma);
 
         var environmentEfficiency = mixture.Volume / mixture.Pressure;
-        var ratioEfficiency = Math.Min(initialNitrousOxide / initialPlasma, 1);
+        var ratioEfficiency = Math.Min(initN2O / initPlasma, 1);
 
-        var bZFormed = Math.Min(0.01f * ratioEfficiency * environmentEfficiency, Math.Min(initialNitrousOxide * 0.4f, initialPlasma * 0.8f));
+        var producedAmount = Math.Min(0.01f * ratioEfficiency * environmentEfficiency, Math.Min(initN2O * 0.4f, initPlasma * 0.8f));
 
-        if (initialNitrousOxide - bZFormed * 0.4f < 0 || initialPlasma - (0.8f - bZFormed) < 0 || bZFormed <= 0)
+        if (producedAmount <= 0)
             return ReactionResult.NoReaction;
+        producedAmount = Math.Min(initPlasma / 0.8f, producedAmount);
+        producedAmount = Math.Min(initN2O / 0.4f, producedAmount);
 
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
-        var amountDecomposed = 0.0f;
-        var nitrousOxideDecomposedFactor = Math.Max(4.0f * (initialPlasma / (initialNitrousOxide + initialPlasma) - 0.75f), 0);
-        if (nitrousOxideDecomposedFactor > 0)
+        var nitrousOxideDecomposed = Math.Max(4.0f * (initPlasma / (initN2O + initPlasma) - 0.75f), 0);
+        var nitrogenAdded = 0f;
+        var oxygenAdded = 0f;
+        if (nitrousOxideDecomposed > 0)
         {
-            amountDecomposed = 0.4f * bZFormed * nitrousOxideDecomposedFactor;
-            mixture.AdjustMoles(Gas.Oxygen, amountDecomposed);
-            mixture.AdjustMoles(Gas.Nitrogen, 0.5f * amountDecomposed);
+            var amountDecomposed = 0.4f * producedAmount * nitrousOxideDecomposed;
+            nitrogenAdded = amountDecomposed;
+            oxygenAdded = 0.5f * amountDecomposed;
         }
+        var bzFormed = producedAmount * (1f - nitrousOxideDecomposed);
+        var n2oRemoved = Math.Min(initN2O, 0.4f * producedAmount);
+        var plasmaRemoved = Math.Min(initPlasma, 0.8f * bzFormed);
 
-        mixture.AdjustMoles(Gas.BZ, Math.Max(0f, bZFormed * (1.0f - nitrousOxideDecomposedFactor)));
-        mixture.AdjustMoles(Gas.NitrousOxide, -0.4f * bZFormed);
-        mixture.AdjustMoles(Gas.Plasma, -0.8f * bZFormed * (1.0f - nitrousOxideDecomposedFactor));
+        mixture.AdjustMoles(Gas.NitrousOxide, -n2oRemoved);
+        mixture.AdjustMoles(Gas.Plasma, -plasmaRemoved);
+        mixture.AdjustMoles(Gas.Nitrogen, nitrogenAdded);
+        mixture.AdjustMoles(Gas.Oxygen, oxygenAdded);
+        mixture.AdjustMoles(Gas.BZ, bzFormed);
 
-        var energyReleased = bZFormed * (Atmospherics.BZFormationEnergy + nitrousOxideDecomposedFactor * (Atmospherics.NitrousOxideDecompositionEnergy - Atmospherics.BZFormationEnergy));
-
+        var energyReleased = producedAmount * (Atmospherics.BZFormationEnergy + nitrousOxideDecomposed);
         var newHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
         if (newHeatCapacity > Atmospherics.MinimumHeatCapacity)
             mixture.Temperature = Math.Max((mixture.Temperature * oldHeatCapacity + energyReleased) / newHeatCapacity, Atmospherics.TCMB);

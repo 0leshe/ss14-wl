@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Server.Atmos.Components;
 using Content.Server.Atmos.Piping.Components;
 using Content.Server.NodeContainer.NodeGroups;
@@ -7,6 +6,7 @@ using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Reactions;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Utility;
+using System.Linq;
 
 namespace Content.Server.Atmos.EntitySystems;
 
@@ -271,7 +271,13 @@ public partial class AtmosphereSystem
         // If not handled, this will be false. Just like in space!
         return ev.Result;
     }
-
+    public bool Explosion(IGasMixtureHolder holder, float power)
+    {
+        if (holder is TileAtmosphere tile)
+            return Explosion(tile, power);
+        else
+            return false;
+    }
     public bool AddPipeNet(Entity<GridAtmosphereComponent?> grid, PipeNet pipeNet)
     {
         return _atmosQuery.Resolve(grid, ref grid.Comp, false) && grid.Comp.PipeNets.Add(pipeNet);

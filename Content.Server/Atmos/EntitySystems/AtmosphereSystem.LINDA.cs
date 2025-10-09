@@ -99,7 +99,7 @@ namespace Content.Server.Atmos.EntitySystems
                 }
             }
 
-            if(tile.Air != null)
+            if (tile.Air != null)
                 React(tile.Air, tile);
 
             InvalidateVisuals(ent, tile);

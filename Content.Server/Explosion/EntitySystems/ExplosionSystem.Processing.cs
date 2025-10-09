@@ -1,7 +1,8 @@
-using System.Linq;
-using System.Numerics;
+using Content.Server.Atmos;
+using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.Explosion.Components;
+using Content.Shared.Atmos;
 using Content.Shared.CCVar;
 using Content.Shared.Damage;
 using Content.Shared.Database;
@@ -21,6 +22,8 @@ using Robust.Shared.Player;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using System.Linq;
+using System.Numerics;
 using TimedDespawnComponent = Robust.Shared.Spawners.TimedDespawnComponent;
 
 namespace Content.Server.Explosion.EntitySystems;
@@ -28,6 +31,7 @@ namespace Content.Server.Explosion.EntitySystems;
 public sealed partial class ExplosionSystem
 {
     [Dependency] private readonly FlammableSystem _flammableSystem = default!;
+    [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
 
     /// <summary>
     ///     Used to limit explosion processing time. See <see cref="MaxProcessingTime"/>.
@@ -210,6 +214,15 @@ public sealed partial class ExplosionSystem
         float? fireStacks,
         EntityUid? cause)
     {
+        _adminLogger.Add(LogType.Flammable, LogImpact.Extreme, $"{tile.X} | {tile.Y}");
+        TryComp<GridAtmosphereComponent>(grid.Owner, out var gridAtmposComp);
+        if (gridAtmposComp != null)
+        {
+            var atmosTile = gridAtmposComp.Tiles[tile];
+            if (atmosTile != null && atmosTile.Air != null)
+                _atmosphereSystem.HotspotExpose((grid, gridAtmposComp), tile, 700, Atmospherics.CellVolume / 4, cause);
+        }
+
         var size = grid.Comp.TileSize;
         var gridBox = new Box2(tile * size, (tile + 1) * size);
 

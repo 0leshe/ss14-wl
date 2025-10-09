@@ -3,14 +3,15 @@ using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.EntitySystems;
 using Content.Shared.Cargo;
+using Content.Shared.CCVar;
 using Content.Shared.Throwing;
 using JetBrains.Annotations;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
-using Robust.Shared.Random;
 using Robust.Shared.Configuration;
-using Content.Shared.CCVar;
+using Robust.Shared.Map;
+using Robust.Shared.Random;
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -93,9 +94,7 @@ namespace Content.Server.Atmos.EntitySystems
                 }
 
                 if (comp.Air != null)
-                {
                     _atmosphereSystem.React(comp.Air, comp);
-                }
 
                 CheckStatus(gasTank);
 
@@ -164,10 +163,7 @@ namespace Content.Server.Atmos.EntitySystems
             {
                 // Give the gas a chance to build up more pressure.
                 for (var i = 0; i < 3; i++)
-                {
                     _atmosphereSystem.React(component.Air, component);
-                }
-
                 pressure = component.Air.Pressure;
                 var range = MathF.Sqrt((pressure - component.TankFragmentPressure) / component.TankFragmentScale);
 

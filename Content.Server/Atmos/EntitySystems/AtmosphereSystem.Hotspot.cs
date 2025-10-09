@@ -1,19 +1,14 @@
 using Content.Server.Atmos.Components;
 using Content.Server.Decals;
-using Content.Server.Explosion.EntitySystems;
 using Content.Shared.Atmos;
 using Content.Shared.Atmos.Components;
 using Content.Shared.Atmos.Reactions;
-using Content.Shared.Coordinates;
 using Content.Shared.Database;
-using Content.Shared.Explosion;
 using Robust.Shared.Audio;
-using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
-using System.Linq;
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -24,8 +19,6 @@ namespace Content.Server.Atmos.EntitySystems
         [Dependency] private readonly DecalSystem _decalSystem = default!;
         [Dependency] private readonly IRobustRandom _random = default!;
 
-        [Dependency] private readonly ExplosionSystem _explosions = default!;
-        [Dependency] private readonly IEntityManager _entityManager = default!;
 
 
         private const int HotspotSoundCooldownCycles = 200;
@@ -58,8 +51,8 @@ namespace Content.Server.Atmos.EntitySystems
                 ExcitedGroupResetCooldowns(tile.ExcitedGroup);
 
             if ((tile.Hotspot.Temperature < Atmospherics.FireMinimumTemperatureToExist) || (tile.Hotspot.Volume <= 1f)
-                || tile.Air == null || tile.Air.GetMoles(Gas.Oxygen) < 0.5f || (tile.Air.GetMoles(Gas.Plasma) < 0.5f && tile.Air.GetMoles(Gas.Tritium) < 0.5f
-                || tile.Air.GetMoles(Gas.HyperNoblium) > 5f))
+                || tile.Air == null || tile.Air.GetMoles(Gas.Oxygen) < 0.5f || tile.Air.GetMoles(Gas.Plasma) < 0.5f && tile.Air.GetMoles(Gas.Tritium) < 0.5f && tile.Air.GetMoles(Gas.Kritium) < 0.5f
+                || tile.Air.GetMoles(Gas.HyperNoblium) >= 2.5f)
             {
                 tile.Hotspot = new Hotspot();
                 InvalidateVisuals(ent, tile);
@@ -106,10 +99,9 @@ namespace Content.Server.Atmos.EntitySystems
                             continue;
 
                         if (!otherTile.Hotspot.Valid)
-                            HotspotExpose(gridAtmosphere, otherTile, radiatedTemperature, Atmospherics.CellVolume / 4, map: ent.Comp4);
+                            HotspotExpose(gridAtmosphere, otherTile, radiatedTemperature, Atmospherics.CellVolume / 4);
                     }
                 }
-                HotspotExplosion(tile);
             }
             else
             {
@@ -135,54 +127,24 @@ namespace Content.Server.Atmos.EntitySystems
             // TODO ATMOS Maybe destroy location here?
         }
 
-        private void HotspotExplosion(TileAtmosphere tile, EntityUid? sparkSourceUid = null)
-        {
-            var mixture = tile.Air;
-            if (mixture == null)
-                return;
-            var oldHeatCapacity = GetHeatCapacity(mixture, true);
-            var initialKritium = mixture.GetMoles(Gas.Kritium);
-            var initialNO = mixture.GetMoles(Gas.NitrousOxide);
-
-            if (initialKritium < 0.5f)
-                return;
-
-            var explosionPower = (float)((Math.Pow(initialKritium, 1.08f) + 3.1f * Math.Pow(initialKritium, 0.59)) * (-0.69f * Math.Pow(50, -40 * (initialNO / initialKritium)) + 1.75f));
-            _adminLog.Add(LogType.Flammable, LogImpact.Extreme, $"{explosionPower}");
-            var type = _protoMan.EnumeratePrototypes<ExplosionPrototype>().FirstOrDefault();
-            if (type != null && explosionPower > 12)
-            {
-                if (sparkSourceUid != null)
-                    _adminLog.Add(LogType.Flammable, LogImpact.Extreme, $"Spark of {ToPrettyString(sparkSourceUid.Value)} caused atmos EXPLOSION with gas: {initialNO}mol nitrous oxide, {initialKritium}mol kritium with power {explosionPower}");
-                else
-                    _adminLog.Add(LogType.Flammable, LogImpact.Extreme, $"Heat caused atmos EXPLOSION with gas: {initialNO}mol nitrous oxide, {initialKritium}mol kritium with power {explosionPower}");
-
-                _explosions.QueueExplosion(_transformSystem.ToMapCoordinates(_mapSystem.ToCenterCoordinates(tile.GridIndex, tile.GridIndices)), type.ID, explosionPower, 5, 75, cause: sparkSourceUid, addLog: false);
-                mixture.AdjustMoles(Gas.Kritium, -initialKritium);
-                mixture.AdjustMoles(Gas.NitrousOxide, -initialNO / 2);
-                var newHeatCapacity = GetHeatCapacity(mixture, true);
-                mixture.Temperature = Math.Max((mixture.Temperature * oldHeatCapacity) / newHeatCapacity, Atmospherics.TCMB);
-            }
-        }
-
         private void HotspotExpose(GridAtmosphereComponent gridAtmosphere, TileAtmosphere tile,
-            float exposedTemperature, float exposedVolume, bool soh = false, EntityUid? sparkSourceUid = null, TransformComponent? map = null)
+            float exposedTemperature, float exposedVolume, bool soh = false, EntityUid? sparkSourceUid = null)
         {
             var mixture = tile.Air;
             if (mixture == null)
                 return;
 
             var oxygen = mixture.GetMoles(Gas.Oxygen);
+            var hypernoblium = mixture.GetMoles(Gas.HyperNoblium);
 
-            if (oxygen < 0.5f)
+            if (oxygen < 0.5f || hypernoblium >= 2.5f)
                 return;
 
             var plasma = mixture.GetMoles(Gas.Plasma);
             var tritium = mixture.GetMoles(Gas.Tritium);
+            var kritium = mixture.GetMoles(Gas.Kritium);
 
-            var hypernoblium = mixture.GetMoles(Gas.HyperNoblium);
-
-            var mayIngite = plasma > 0.5f && hypernoblium < 5f || tritium > 0.5f && hypernoblium < 5f;
+            var mayIngite = plasma > 0.5f || tritium > 0.5f || kritium > 0.5f;
 
             if (tile.Hotspot.Valid)
             {
@@ -200,7 +162,7 @@ namespace Content.Server.Atmos.EntitySystems
             if (exposedTemperature > Atmospherics.PlasmaMinimumBurnTemperature && mayIngite)
             {
                 if (sparkSourceUid.HasValue)
-                    _adminLog.Add(LogType.Flammable, LogImpact.High, $"Heat/spark of {ToPrettyString(sparkSourceUid.Value)} caused atmos ignition of gas: {mixture.Temperature.ToString():temperature}K - {oxygen}mol Oxygen, {plasma}mol Plasma, {tritium}mol Tritium");
+                    _adminLog.Add(LogType.Flammable, LogImpact.High, $"Heat/spark of {ToPrettyString(sparkSourceUid.Value)} caused atmos ignition of gas: {mixture.Temperature.ToString():temperature}K - {oxygen}mol Oxygen, {plasma}mol Plasma, {tritium}mol Tritium, {kritium}mol Kritium");
 
                 tile.Hotspot = new Hotspot
                 {
@@ -215,7 +177,6 @@ namespace Content.Server.Atmos.EntitySystems
                 AddActiveTile(gridAtmosphere, tile);
                 gridAtmosphere.HotspotTiles.Add(tile);
             }
-            HotspotExplosion(tile, sparkSourceUid);
         }
 
         private void PerformHotspotExposure(TileAtmosphere tile)

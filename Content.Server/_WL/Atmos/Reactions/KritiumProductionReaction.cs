@@ -10,13 +10,12 @@ public sealed partial class KritiumProductionReaction : IGasReactionEffect
 {
     public ReactionResult React(GasMixture mixture, IGasMixtureHolder? holder, AtmosphereSystem atmosphereSystem, float heatScale)
     {
-        var initialHyperNoblium = mixture.GetMoles(Gas.HyperNoblium);
-        if (initialHyperNoblium >= 2.5f && mixture.Temperature > 20f)
+        var initialHypernoblium = mixture.GetMoles(Gas.HyperNoblium);
+        if (initialHypernoblium >= 2.5f && mixture.Temperature > 20f)
         {
-            mixture.AdjustMoles(Gas.HyperNoblium, initialHyperNoblium - 0.1f);
+            mixture.AdjustMoles(Gas.HyperNoblium, -0.1f);
             return ReactionResult.NoReaction;
         }
-
         var initialOxygen = mixture.GetMoles(Gas.Oxygen);
         var initialPlasma = mixture.GetMoles(Gas.Plasma);
 

@@ -1,4 +1,28 @@
 - type: gasReaction
+  id: KritiumFireReaction
+  priority: -2
+  minimumTemperature: 373.149 # Same as Atmospherics.FireMinimumTemperatureToExist
+  minimumRequirements: # In this case, same as minimum mole count.
+  - 0     # oxygen
+  - 0     # nitrogen
+  - 0     # carbon dioxide
+  - 0     # plasma
+  - 0     # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 0     # n2o
+  - 0     # frezon
+  - 0     # bz
+  - 0     # pluoxium
+  - 0     # nitrium
+  - 0     # healium
+  - 0     # zauker
+  - 0     # hyper-noblium
+  - 1     # kritium
+  effects:
+    - !type:KritiumFireReaction {}
+
+- type: gasReaction
   id: BZProductionReaction
   priority: 2
   maximumTemperature: 313.149
@@ -11,8 +35,6 @@
   - 0     # vapor
   - 0     # miasma
   - 10    # n2o
-  - 0     # frezon
-  - 0     # bz
   effects:
   - !type:BZProductionReaction {}
 
@@ -45,23 +67,18 @@
   - 10    # nitrogen
   - 0     # carbon dioxide
   - 0     # plasma
-  - 20    # tritium
+  - 10    # tritium
   - 0     # vapor
   - 0     # miasma
   - 0     # n2o
   - 0     # frezon
   - 5     # bz
-  - 0     # pluoxium
-  - 0     # nitrium
-  - 0     # healium
-  - 0     # zauker
   effects:
   - !type:NitriumProductionReaction {}
 
 - type: gasReaction
   id: NitriumDecomposition
   priority: 3
-  maximumTemperature: 343.15
   minimumRequirements:
   - 0.01  # oxygen
   - 0     # nitrogen
@@ -75,14 +92,12 @@
   - 0     # bz
   - 0     # pluoxium
   - 0.01  # nitrium
-  - 0     # healium
-  - 0     # zauker
   effects:
   - !type:NitriumDecompositionReaction {}
 
 - type: gasReaction
   id: ZaukerProduction
-  priority: 2
+  priority: 5
   minimumTemperature: 50000
   maximumTemperature: 75000
   minimumRequirements:
@@ -145,10 +160,29 @@
   - 0     # hydrogen
   - 0     # nitrium
   - 0     # healium
-  - 0     # hyper-noblium
   - 0     # zauker
+  - 0     # hyper-noblium
   effects:
   - !type:HyperNobliumProductionReaction {}
+
+- type: gasReaction
+  id: HealiumProduction
+  priority: 2
+  maximumTemperature: 300.0
+  minimumTemperature: 22.0
+  minimumRequirements:
+  - 0     # oxygen
+  - 0     # nitrogen
+  - 0     # carbon dioxide
+  - 0     # plasma
+  - 0     # tritium
+  - 0     # vapor
+  - 0     # miasma
+  - 0     # n2o
+  - 5     # frezon
+  - 5     # bz
+  effects:
+  - !type:HealiumProductionReaction
 
 - type: gasReaction
   id: KritiumProductionReaction
@@ -160,4 +194,4 @@
   - 0     # carbon dioxide
   - 0.8    # plasma
   effects:
-  - !type:BZProductionReaction {}
+  - !type:KritiumProductionReaction {}
