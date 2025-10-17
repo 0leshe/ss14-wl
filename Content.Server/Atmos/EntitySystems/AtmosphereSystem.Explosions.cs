@@ -16,7 +16,7 @@ namespace Content.Server.Atmos.EntitySystems
             var initialKritium = mixture.GetMoles(Gas.Kritium);
             var initialNO = mixture.GetMoles(Gas.NitrousOxide);
             _adminLog.Add(LogType.Flammable, LogImpact.Extreme, $"Atmos EXPLOSION with gas: {initialNO}mol nitrous oxide, {initialKritium}mol kritium with power {explosionPower}");
-            _explosions.QueueExplosion(_transformSystem.ToMapCoordinates(_mapSystem.ToCenterCoordinates(tile.GridIndex, tile.GridIndices)), "DemolitionCharge", explosionPower, 5, 50, cause: null, addLog: false);
+            _explosions.QueueExplosion(_transformSystem.ToMapCoordinates(_mapSystem.ToCenterCoordinates(tile.GridIndex, tile.GridIndices)), "Default", explosionPower, 5, 50, cause: null, addLog: false);
             return true;
         }
     }

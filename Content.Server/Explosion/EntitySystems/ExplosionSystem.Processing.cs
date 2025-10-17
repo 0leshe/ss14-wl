@@ -214,15 +214,6 @@ public sealed partial class ExplosionSystem
         float? fireStacks,
         EntityUid? cause)
     {
-        _adminLogger.Add(LogType.Flammable, LogImpact.Extreme, $"{tile.X} | {tile.Y}");
-        TryComp<GridAtmosphereComponent>(grid.Owner, out var gridAtmposComp);
-        if (gridAtmposComp != null)
-        {
-            var atmosTile = gridAtmposComp.Tiles[tile];
-            if (atmosTile != null && atmosTile.Air != null)
-                _atmosphereSystem.HotspotExpose((grid, gridAtmposComp), tile, 700, Atmospherics.CellVolume / 4, cause);
-        }
-
         var size = grid.Comp.TileSize;
         var gridBox = new Box2(tile * size, (tile + 1) * size);
 

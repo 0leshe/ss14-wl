@@ -30,11 +30,11 @@
   - 0     # oxygen
   - 0     # nitrogen
   - 0     # carbon dioxide
-  - 10    # plasma
+  - 1    # plasma
   - 0     # tritium
   - 0     # vapor
   - 0     # miasma
-  - 10    # n2o
+  - 1    # n2o
   effects:
   - !type:BZProductionReaction {}
 
@@ -64,15 +64,15 @@
   minimumTemperature: 1500
   minimumRequirements:
   - 0     # oxygen
-  - 10    # nitrogen
+  - 1    # nitrogen
   - 0     # carbon dioxide
   - 0     # plasma
-  - 10    # tritium
+  - 1    # tritium
   - 0     # vapor
   - 0     # miasma
   - 0     # n2o
   - 0     # frezon
-  - 5     # bz
+  - 0.5     # bz
   effects:
   - !type:NitriumProductionReaction {}
 
@@ -147,10 +147,10 @@
   maximumTemperature: 15
   minimumRequirements:
   - 0     # oxygen
-  - 10    # nitrogen
+  - 2    # nitrogen
   - 0     # carbon dioxide
   - 0     # plasma
-  - 5     # tritium
+  - 1     # tritium
   - 0     # vapor
   - 0     # miasma
   - 0     # n2o
@@ -179,8 +179,8 @@
   - 0     # vapor
   - 0     # miasma
   - 0     # n2o
-  - 5     # frezon
-  - 5     # bz
+  - 2     # frezon
+  - 2     # bz
   effects:
   - !type:HealiumProductionReaction
 
@@ -188,6 +188,7 @@
   id: KritiumProductionReaction
   priority: 2
   minimumPressure: 1200
+  minimumTemperature: 343.15
   minimumRequirements:
   - 0.05     # oxygen
   - 0     # nitrogen

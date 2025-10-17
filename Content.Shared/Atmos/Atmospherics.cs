@@ -363,7 +363,7 @@ namespace Content.Shared.Atmos
         /// <summary>
         ///     Defines energy released in BZ formation.
         /// </summary>
-        public const float BZFormationEnergy = 80000f;
+        public const float BZFormationEnergy = 20000f;
 
         /// <summary>
         ///     Defines energy released in N2O decomposition reaction.
@@ -383,9 +383,8 @@ namespace Content.Shared.Atmos
         public const float NitriumFormationEnergy = 100000f;
         public const float NitriumDecompositionTempDivisor = (T0C + 100f) * 8f;
         public const float NitriumDecompositionEnergy = 30000f;
-        public const float NitriumDecompositionMaxTemp = T0C + 70f;
-        public const float NobliumFormationEnergy = 20000000f;
-        public const float HealiumFormationEnergy = 9000f;
+        public const float NobliumFormationEnergy = 200000f;
+        public const float HealiumFormationEnergy = 2000f;
         public const float ZaukerFormationEnergy = 5000f;
         public const float ZaukerFormationTemperatureScale = 0.000005f;
         public const float ZaukerDecompositionMaxRate = 20f;

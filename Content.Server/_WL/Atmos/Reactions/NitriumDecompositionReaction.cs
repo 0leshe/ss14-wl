@@ -24,8 +24,6 @@ public sealed partial class NitriumDecompositionReaction : IGasReactionEffect
         if (burnedFuel <= 0)
             return ReactionResult.NoReaction;
 
-        if (initialNitrium < burnedFuel)
-            burnedFuel = initialNitrium;
         burnedFuel = Math.Min(burnedFuel, initialNitrium);
 
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);

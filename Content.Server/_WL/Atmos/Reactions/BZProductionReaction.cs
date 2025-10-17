@@ -22,7 +22,7 @@ public sealed partial class BZProductionReaction : IGasReactionEffect
         var environmentEfficiency = mixture.Volume / mixture.Pressure;
         var ratioEfficiency = Math.Min(initN2O / initPlasma, 1);
 
-        var producedAmount = Math.Min(0.01f * ratioEfficiency * environmentEfficiency, Math.Min(initN2O * 0.4f, initPlasma * 0.8f));
+        var producedAmount = Math.Min(0.09f * ratioEfficiency * environmentEfficiency, Math.Min(initN2O * 0.4f, initPlasma * 0.8f));
 
         if (producedAmount <= 0)
             return ReactionResult.NoReaction;

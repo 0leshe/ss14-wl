@@ -28,8 +28,8 @@ public sealed partial class KritiumProductionReaction : IGasReactionEffect
         if (producedAmount <= 0)
             return ReactionResult.NoReaction;
 
-        producedAmount = Math.Min(initialOxygen, producedAmount);
         producedAmount = Math.Min(initialPlasma, producedAmount * 2);
+        producedAmount = Math.Min(initialOxygen, producedAmount);
 
         var oldHeatCapacity = atmosphereSystem.GetHeatCapacity(mixture, true);
 
